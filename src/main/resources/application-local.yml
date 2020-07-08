@@ -1,0 +1,30 @@
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://127.0.0.1:8081/eureka/
+server:
+  port: 80
+spring:
+  application:
+    name: cloud-gateway-server
+  cloud:
+    gateway:
+      routes:
+        - id: activiti-server
+          uri: lb://activiti-server
+          predicates:
+            - Path=/activiti-server/**
+          filters:
+            - StripPrefix=1
+        - id: identity-server
+          uri: lb://identity-server
+          predicates:
+            - Path=/identity-server/**
+          filters:
+            - StripPrefix=1
+        - id: address-book-front
+          uri: http://127.0.0.1:4200
+          predicates:
+            - Path=/**
+          filters:
+            - StripPrefix=0
